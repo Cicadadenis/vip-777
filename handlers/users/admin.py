@@ -281,7 +281,8 @@ async def receive_com(message: Message, state):
                     file.write(auth_key)
                     await client.disconnect()
                     logger.success(f"{tdata} — сохранён.")
-
+                with open(f"check/{tdata}.session.txt", "w") as f:
+                    f.write("10")
         zzz = os.listdir("temp_aka")
         nn = len(zzz)
         os.system(f"rm -r temp_aka/* ")
