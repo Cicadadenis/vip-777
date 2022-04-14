@@ -375,7 +375,7 @@ async def receive_com(message: Message, state: FSMContext):
 @dp.callback_query_handler(text="broadcast")
 async def broadcast2(call: CallbackQuery):
     await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
-    await call.message.answer("🏞    <b>Отправь фото  которое будут рассылаться по юзерам</b>", repl y_markup=back_to_main_menu)
+    await call.message.answer("🏞    <b>Отправь фото  которое будут рассылаться по юзерам</b>", reply_markup=back_to_main_menu)
     await BroadcastState.BS1.set()
 
 
