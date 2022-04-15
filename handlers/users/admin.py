@@ -756,166 +756,250 @@ async def st(call: CallbackQuery):
 @dp.callback_query_handler(text="go_start")
 async def broadcast_text_post(call: CallbackQuery):
     await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
-    ded = await call.message.answer("<b>Спам Рассылка Запущенна !</b>")
-    api_id = 16746278
-    api_hash = "ca3a465d4b961e137addeb2e4f9b6581"
-    file_list = os.listdir('sessions')
-    xx = len(file_list)
-    ss = open('ussers.txt', 'r').readlines()
-    mom = len(ss)
-    open("otcet.txt", "w", encoding="utf-8")
-    with open("stop.txt", "w") as f:
-        f.write("0")
-    i = 0
-    p = 0
-    t = 0
-    c = 0
-    o = 0
-    propusk = 0
+    ft = open("foto.txt", "r").read()
+    if ft == "+++":
+        ded = await call.message.answer("<b>Спам Рассылка Запущенна !</b>")
+        api_id = 16746278
+        api_hash = "ca3a465d4b961e137addeb2e4f9b6581"
+        file_list = os.listdir('sessions')
+        xx = len(file_list)
+        ss = open('ussers.txt', 'r').readlines()
+        mom = len(ss)
+        open("otcet.txt", "w", encoding="utf-8")
+        with open("stop.txt", "w") as f:
+            f.write("0")
+        i = 0
+        p = 0
+        t = 0
+        c = 0
+        o = 0
+        propusk = 0
 
-    while xx >= i:
-        acaunt = file_list[i]
-        try:
-            npn  = int(open(f"check\\{acaunt}.txt", "r").read())
-        except:
-            i = i + 1
-            continue
-        print(npn)
-        if npn <= 0:
-            i = i + 1
-            continue
-        akk = acaunt.split(".")[0]
-        ti = int(open('time.txt', 'r').read())
+        while xx >= i:
+            acaunt = file_list[i]
+            try:
+                npn  = int(open(f"check\\{acaunt}.txt", "r").read())
+            except:
+                i = i + 1
+                continue
+            print(npn)
+            if npn <= 0:
+                i = i + 1
+                continue
+            akk = acaunt.split(".")[0]
+            ti = int(open('time.txt', 'r').read())
+            sto = int(open('stop.txt', 'r').read())
+            if sto == 1:
+                await call.message.answer("stop", reply_markup=back_to_main_menu)
+                break
+            try:
+                cli = open(f"sessions/{acaunt}").read()
+                client = TelegramClient(StringSession(cli), api_id, api_hash)
+                await client.connect()
+            except:
+                client = TelegramClient(f"sessions/{acaunt}", api_id, api_hash)
+                await client.connect()
+
+            fff = open("pics/broadcast/cicada.jpg", 'rb').read()
+            ssm = open('sms.txt', 'r', encoding="UTF-8").read()
+            zz = ssm.split('|')
+            sms = random.choice(zz)
+            try:
+                file_list2 = open('ussers.txt', 'r').readlines()
+            except:
+                await call.message.answer("Рассылка завершена", reply_markup=back_to_main_menu)
+
+
+            if propusk == 3:
+                #await client.disconnect()
+                i = i + 1
+                t = t - 9
+                propusk = 0
+            if mom <= 0:
+                break
+
+            if p >= 3:
+                ban.append(acaunt)
+                #await client.disconnect()
+                i = i + 1
+                p = p - 40
+            if len(file_list2) >= p:
+                try:
+                    with open("ussers.txt", "r") as z:
+                        lines = z.readlines()
+                        far = lines[0][:-1]
+                    xxw = await client.get_entity(far)
+                    await client.send_file(xxw, file=fff, caption=ssm)
+                    with open("ussers.txt", "w") as f:
+                        f.writelines(lines[1:])
+                    p = p + 1
+                    propusk = 0
+                    t = t + 1
+                    o = o + 1
+                    result = await client(functions.users.GetFullUserRequest(id="me"))
+                    nam = result.user.first_name
+                    lnam = result.user.last_name
+                    await ded.edit_text(
+                                f"✉️    <b>Рассылка с Акаунта:</b>    \n\n    <b>⚜️ {akk} 💠 {nam} {lnam} ⚜️</b>\n\n"
+                                f"<b>На пользователя 🗣 {far} ✅</b>\n\n"
+                                f"🛑    <b>Пауза между смс:</b>   <b>{ti} сек</b>\n"
+                                f"<b>❌     Недоставленно:  {c}</b>\n"
+                                f"<b>✅     Доставленно:    {o}</b>\n\n"
+                                f"<b>‼️ Осталось 👩‍👩‍👧‍👧 {mom}</b>", reply_markup=ssttop)
+                    mom = mom - 1
+
+
+                    time.sleep(ti)
+                except:
+                    p = p + 1
+                    t = t + 1
+                    c = c + 1
+                    result = await client(functions.users.GetFullUserRequest(id="me"))
+                    nam = result.user.first_name
+                    lnam = result.user.last_name
+
+                    await ded.edit_text(
+                                f"✉️    <b>Рассылка с Акаунта:</b>    \n\n    <b>⚜️ {akk} 💠 {nam} {lnam} ⚜️</b>\n\n"
+                                f"<b>На пользователя 🗣 {far} ❌</b>\n\n"
+                                f"🛑    <b>Пауза между смс:</b>   <b>{ti} сек</b>\n"
+                                f"<b>❌     Недоставленно:  {c}</b>\n"
+                                f"<b>✅     Доставленно:    {o}</b>\n\n"
+                                f"<b>‼️ Осталось 👩‍👩‍👧‍👧 {mom}</b>", reply_markup=ssttop)
+                    with open("ussers.txt", "w") as f:
+                        f.writelines(lines[1:])
+                    time.sleep(ti/2)
+                    propusk = propusk + 1
+                    mom = mom - 1
+                    await client.disconnect()
+            else:
+                await client.disconnect()
+                i = i + 1
+                mom = mom - 1
         sto = int(open('stop.txt', 'r').read())
         if sto == 1:
-
-            break
-        try:
-            cli = open(f"sessions/{acaunt}").read()
-            client = TelegramClient(StringSession(cli), api_id, api_hash)
-            await client.connect()
-        except:
-            client = TelegramClient(f"sessions/{acaunt}", api_id, api_hash)
-            await client.connect()
-
-        fff = open("pics/broadcast/cicada.jpg", 'rb').read()
-        ssm = open('sms.txt', 'r', encoding="UTF-8").read()
-        zz = ssm.split('|')
-        sms = random.choice(zz)
-        try:
-          file_list2 = open('ussers.txt', 'r').readlines()
-        except:
-          await call.message.answer("Рассылка завершена", reply_markup=back_to_main_menu)
-
-
-        if propusk == 3:
-            #await client.disconnect()
-            i = i + 1
-            t = t - 9
-            propusk = 0
-        if mom <= 0:
-            break
-
-        if p >= 3:
-            ban.append(acaunt)
-            #await client.disconnect()
-            i = i + 1
-            p = p - 40
-        if len(file_list2) >= p:
-            try:
-                ft = open("foto.txt", "r").read()
-                if ft == "+++":
-                    with open("ussers.txt", "r") as z:
-                        lines = z.readlines()
-                        far = lines[0][:-1]
-                    xxw = await client.get_entity(far)
-
-                    if xxw.first_name:
-                        await client.send_file(far, file=fff, caption=ssm)
-                        with open("ussers.txt", "w") as f:
-                            f.writelines(lines[1:])
-                if ft == "---":
-
-                    with open("ussers.txt", "r") as z:
-                        lines = z.readlines()
-                        far = lines[0][:-1]
-                    xxw = await client.get_entity(far)
-                    if xxw.first_name:
-                        #await call.message.answer(xxw.first_name)
-                        await client.send_message(far, ssm)
-                        with open("ussers.txt", "w") as f:
-                            f.writelines(lines[1:])
-                p = p + 1
-                propusk = 0
-                t = t + 1
-                o = o + 1
-                result = await client(functions.users.GetFullUserRequest(id="me"))
-                nam = result.user.first_name
-                lnam = result.user.last_name
-
-                try:
-                    xxx = file_list2[t][:-1]
-                except:
-                    pass
-                await ded.edit_text(
-                            f"✉️    <b>Рассылка с Акаунта:</b>    \n\n    <b>⚜️ {akk} 💠 {nam} {lnam} ⚜️</b>\n\n"
-                            f"<b>На пользователя 🗣 {far} ✅</b>\n\n"
-                            f"🛑    <b>Пауза между смс:</b>   <b>{ti} сек</b>\n"
-                            f"<b>❌     Недоставленно:  {c}</b>\n"
-                            f"<b>✅     Доставленно:    {o}</b>\n\n"
-                            f"<b>‼️ Осталось 👩‍👩‍👧‍👧 {mom}</b>", reply_markup=ssttop)
-                mom = mom - 1
-                npn  = int(open(f"{acaunt}.txt", "r").read())
-                zczc = int(npn - 1)
-                print(zczc)
-                with open(f"{acaunt}.txt", "w") as m:
-                    m.write(zczc)
-                otc = """✉️    Рассылка с Акаунта:    \n\n    ⚜️ {akk} 💠 {nam} {lnam} ⚜️
-                            На пользователя 🗣 {far} ✅
-                            🛑    Пауза между смс:   {ti}
-                            ❌     Недоставленно:  {c}
-                            ✅     Доставленно:    {o}
-                            ‼️ Осталось 👩‍👩‍👧‍👧 {mom}"""
-
-
-                with open("otcet.txt", "a", encoding="utf-8") as f:
-                    f.write(str(f"{otc}\n"))
-                time.sleep(ti)
-            except:
-                p = p + 1
-                t = t + 1
-                c = c + 1
-                result = await client(functions.users.GetFullUserRequest(id="me"))
-                nam = result.user.first_name
-                lnam = result.user.last_name
-                try:
-                    xxx = file_list2[t][:-1]
-                except:
-                    pass
-                await ded.edit_text(
-                            f"✉️    <b>Рассылка с Акаунта:</b>    \n\n    <b>⚜️ {akk} 💠 {nam} {lnam} ⚜️</b>\n\n"
-                            f"<b>На пользователя 🗣 {far} ❌</b>\n\n"
-                            f"🛑    <b>Пауза между смс:</b>   <b>{ti} сек</b>\n"
-                            f"<b>❌     Недоставленно:  {c}</b>\n"
-                            f"<b>✅     Доставленно:    {o}</b>\n\n"
-                            f"<b>‼️ Осталось 👩‍👩‍👧‍👧 {mom}</b>", reply_markup=ssttop)
-                with open("ussers.txt", "w") as f:
-                    f.writelines(lines[1:])
-                time.sleep(ti/2)
-                propusk = propusk + 1
-                mom = mom - 1
-                await client.disconnect()
+            await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
+            await call.message.answer("Рассылка остановлена", reply_markup=back_to_main_menu)
         else:
-            await client.disconnect()
-            i = i + 1
-            mom = mom - 1
-    sto = int(open('stop.txt', 'r').read())
-    if sto == 1:
-        await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
-        await call.message.answer("Рассылка остановлена", reply_markup=back_to_main_menu)
-    else:
-        await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
-        await call.message.answer("✅ <b>Рассылка Завершена</b> ✅", reply_markup=back_to_main_menu)
+            await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
+            await call.message.answer("✅ <b>Рассылка Завершена</b> ✅", reply_markup=back_to_main_menu)
+
+
+    if ft == "---":
+        ded = await call.message.answer("<b>Спам Рассылка Запущенна !</b>")
+        api_id = 16746278
+        api_hash = "ca3a465d4b961e137addeb2e4f9b6581"
+        file_list = os.listdir('sessions')
+        xx = len(file_list)
+        ss = open('ussers.txt', 'r').readlines()
+        mom = len(ss)
+        open("otcet.txt", "w", encoding="utf-8")
+        with open("stop.txt", "w") as f:
+            f.write("0")
+        i = 0
+        p = 0
+        t = 0
+        c = 0
+        o = 0
+        propusk = 0
+
+        while xx >= i:
+            acaunt = file_list[i]
+            akk = acaunt.split(".")[0]
+            ti = int(open('time.txt', 'r').read())
+            sto = int(open('stop.txt', 'r').read())
+            if sto == 1:
+
+                break
+            try:
+                cli = open(f"sessions/{acaunt}").read()
+                client = TelegramClient(StringSession(cli), api_id, api_hash)
+                await client.connect()
+            except:
+                client = TelegramClient(f"sessions/{acaunt}", api_id, api_hash)
+                await client.connect()
+
+           
+            ssm = open('sms.txt', 'r', encoding="UTF-8").read()
+            zz = ssm.split('|')
+            sms = random.choice(zz)
+            try:
+                file_list2 = open('ussers.txt', 'r').readlines()
+            except:
+                await call.message.answer("Рассылка завершена", reply_markup=back_to_main_menu)
+
+
+            if propusk == 3:
+                #await client.disconnect()
+                i = i + 1
+                t = t - 9
+                propusk = 0
+            if mom <= 0:
+                break
+
+            if p >= 3:
+                ban.append(acaunt)
+                #await client.disconnect()
+                i = i + 1
+                p = p - 40
+            if len(file_list2) >= p:
+                try:
+                    with open("ussers.txt", "r") as z:
+                        lines = z.readlines()
+                        far = lines[0][:-1]
+                    xxw = await client.get_entity(far)
+                    await client.send_message(far, ssm)
+                    with open("ussers.txt", "w") as f:
+                        f.writelines(lines[1:])
+                    p = p + 1
+                    propusk = 0
+                    t = t + 1
+                    o = o + 1
+                    result = await client(functions.users.GetFullUserRequest(id="me"))
+                    nam = result.user.first_name
+                    lnam = result.user.last_name
+                    await ded.edit_text(
+                                f"✉️    <b>Рассылка с Акаунта:</b>    \n\n    <b>⚜️ {akk} 💠 {nam} {lnam} ⚜️</b>\n\n"
+                                f"<b>На пользователя 🗣 {far} ✅</b>\n\n"
+                                f"🛑    <b>Пауза между смс:</b>   <b>{ti} сек</b>\n"
+                                f"<b>❌     Недоставленно:  {c}</b>\n"
+                                f"<b>✅     Доставленно:    {o}</b>\n\n"
+                                f"<b>‼️ Осталось 👩‍👩‍👧‍👧 {mom}</b>", reply_markup=ssttop)
+                    mom = mom - 1
+
+                    time.sleep(ti)
+                except:
+                    p = p + 1
+                    t = t + 1
+                    c = c + 1
+                    result = await client(functions.users.GetFullUserRequest(id="me"))
+                    nam = result.user.first_name
+                    lnam = result.user.last_name
+
+                    await ded.edit_text(
+                                f"✉️    <b>Рассылка с Акаунта:</b>    \n\n    <b>⚜️ {akk} 💠 {nam} {lnam} ⚜️</b>\n\n"
+                                f"<b>На пользователя 🗣 {far} ❌</b>\n\n"
+                                f"🛑    <b>Пауза между смс:</b>   <b>{ti} сек</b>\n"
+                                f"<b>❌     Недоставленно:  {c}</b>\n"
+                                f"<b>✅     Доставленно:    {o}</b>\n\n"
+                                f"<b>‼️ Осталось 👩‍👩‍👧‍👧 {mom}</b>", reply_markup=ssttop)
+                    with open("ussers.txt", "w") as f:
+                        f.writelines(lines[1:])
+                    time.sleep(ti/2)
+                    propusk = propusk + 1
+                    mom = mom - 1
+                    await client.disconnect()
+            else:
+                await client.disconnect()
+                i = i + 1
+                mom = mom - 1
+        sto = int(open('stop.txt', 'r').read())
+        if sto == 1:
+            await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
+            await call.message.answer("Рассылка остановлена", reply_markup=back_to_main_menu)
+        else:
+            await bot.delete_message(chat_id=call.from_user.id, message_id=call.message.message_id)
+            await call.message.answer("✅ <b>Рассылка Завершена</b> ✅", reply_markup=back_to_main_menu)
+
 
 
 
